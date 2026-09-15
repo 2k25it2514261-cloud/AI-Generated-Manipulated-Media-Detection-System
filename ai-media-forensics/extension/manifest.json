@@ -1,30 +1,60 @@
 {
   "manifest_version": 3,
-  "name": "AI Media Forensics Sentinel",
+  "name": "AI Media Forensics Detector",
+  "short_name": "AI Forensics",
   "version": "1.0.0",
-  "description": "Multi-pipeline AI forensics detector overlay for identifying synthetic and manipulated media on social platforms.",
+  "description": "Multi-pipeline AI-generated and manipulated media detection. Automatically flags suspicious images and videos on social media.",
   "permissions": [
     "activeTab",
-    "storage"
+    "contextMenus",
+    "storage",
+    "scripting"
   ],
   "host_permissions": [
     "http://localhost:8000/*",
-    "http://127.0.0.1:8000/*",
-    "https://*/*"
+    "<all_urls>"
   ],
   "background": {
-    "service_worker": "src/background/index.ts",
+    "service_worker": "src/background/service_worker.js",
     "type": "module"
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["src/content/index.ts"],
-      "run_at": "document_idle"
+      "matches": [
+        "https://twitter.com/*",
+        "https://x.com/*",
+        "https://www.facebook.com/*",
+        "https://www.instagram.com/*",
+        "https://www.reddit.com/*",
+        "https://www.linkedin.com/*",
+        "https://www.tiktok.com/*",
+        "https://news.ycombinator.com/*",
+        "https://*.medium.com/*",
+        "http://localhost/*"
+      ],
+      "js": ["src/content/content_script.js"],
+      "run_at": "document_idle",
+      "all_frames": false
     }
   ],
   "action": {
-    "default_popup": "src/popup/index.html",
-    "default_title": "AI Media Forensics"
-  }
+    "default_popup": "src/popup/popup.html",
+    "default_title": "AI Media Forensics",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["src/overlay/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

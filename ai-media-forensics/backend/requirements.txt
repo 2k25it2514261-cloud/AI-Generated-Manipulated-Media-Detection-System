@@ -13,12 +13,17 @@ alembic>=1.13.1
 
 # Image Processing & Forensics Preprocessing
 pillow>=10.2.0
+piexif>=1.1.3
+scipy>=1.12.0
 
 # Machine Learning & Forensics Detectors
 torch>=2.2.0
 torchvision>=0.17.0
 numpy>=1.26.0
 scikit-learn>=1.4.0
+
+# Computer Vision & Video Analysis
+opencv-python-headless>=4.9.0.80
 
 # Utilities & Networking
 requests>=2.31.0
