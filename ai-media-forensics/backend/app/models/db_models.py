@@ -1,7 +1,10 @@
-import datetime
+from datetime import datetime, timezone
 from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 from app.models.database import Base
+
+def get_utc_now():
+    return datetime.now(timezone.utc)
 
 class User(Base):
     __tablename__ = "users"
@@ -12,7 +15,7 @@ class User(Base):
     hashed_password = Column(String(255), nullable=False)
     role = Column(String(50), default="ANALYST", nullable=False) # ADMIN, ANALYST, FACT_CHECKER, RESEARCHER, VIEWER
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=get_utc_now)
 
 class Media(Base):
     __tablename__ = "media"
@@ -24,7 +27,7 @@ class Media(Base):
     sha256 = Column(String(64), index=True, nullable=False)
     storage_path = Column(String(500), nullable=False)
     analysis_copy_path = Column(String(500), nullable=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=get_utc_now)
 
     # Relationships
     results = relationship("DetectionResult", back_populates="media", cascade="all, delete-orphan")
@@ -38,7 +41,7 @@ class DetectionJob(Base):
     status = Column(String(50), default="queued") # queued, processing, completed, failed
     progress = Column(Float, default=0.0)
     error_message = Column(Text, nullable=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=get_utc_now)
     completed_at = Column(DateTime, nullable=True)
 
 class DetectionResult(Base):
@@ -57,7 +60,7 @@ class DetectionResult(Base):
     provenance_score = Column(Float, nullable=True)
     model_version = Column(String(100), default="EfficientNet-B0-v1.0")
     fusion_version = Column(String(100), default="Fusion-v1.0")
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=get_utc_now)
 
     media = relationship("Media", back_populates="results")
     evidence = relationship("ArtifactEvidence", back_populates="detection_result", cascade="all, delete-orphan")
@@ -85,7 +88,7 @@ class ProvenanceRecord(Base):
     watermark_status = Column(String(50), default="not_detected") # detected, not_detected, invalid
     c2pa_status = Column(String(50), default="not_found") # found, not_found, invalid, incomplete
     verification_status = Column(String(50), default="unverified")
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=get_utc_now)
 
     media = relationship("Media", back_populates="provenance_records")
 
@@ -100,4 +103,4 @@ class AuditLog(Base):
     result = Column(String(100), nullable=True)
     system_version = Column(String(50), default="1.0.0")
     details = Column(JSON, nullable=True)
-    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+    timestamp = Column(DateTime, default=get_utc_now)

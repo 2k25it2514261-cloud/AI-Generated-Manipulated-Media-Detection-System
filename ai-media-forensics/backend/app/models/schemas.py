@@ -12,22 +12,36 @@ class HealthCheckResponse(BaseModel):
     database: Dict[str, Any]
     timestamp: datetime = Field(default_factory=utc_now)
 
-# Media Schemas
-class MediaBase(BaseModel):
+# Media Ingestion Schemas
+class MediaUploadResponse(BaseModel):
+    media_id: str
     filename: str
     mime_type: str
     size: int
     sha256: str
+    storage_path: str
+    analysis_copy_path: Optional[str] = None
+    preprocess_info: Dict[str, Any] = {}
+    metadata: Dict[str, Any] = {}
+    created_at: datetime = Field(default_factory=utc_now)
 
-class MediaCreate(MediaBase):
-    pass
-
-class MediaResponse(MediaBase):
+class MediaResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: str
+    filename: str
+    mime_type: str
+    size: int
+    sha256: str
     storage_path: str
+    analysis_copy_path: Optional[str] = None
     created_at: datetime
+
+# Metadata Detail Schema
+class MediaMetadataResponse(BaseModel):
+    media_id: str
+    sha256: str
+    metadata: Dict[str, Any]
 
 # Detection Schemas
 class ScoreSummary(BaseModel):
@@ -76,10 +90,15 @@ class ProvenanceCheckResponse(BaseModel):
     records: List[Dict[str, Any]] = []
 
 # Audit Log Schema
-class AuditLogCreate(BaseModel):
-    user: str = "system"
+class AuditLogResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    user: str
     action: str
     media_id: Optional[str] = None
     operation: str
     result: Optional[str] = None
+    system_version: str
     details: Optional[Dict[str, Any]] = None
+    timestamp: datetime

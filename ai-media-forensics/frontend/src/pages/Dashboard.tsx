@@ -1,6 +1,7 @@
 import React from 'react';
 import { HealthStatus } from '../components/HealthStatus';
 import { PipelineOverview } from '../components/PipelineOverview';
+import { MediaUpload } from '../components/MediaUpload';
 import { HealthResponse } from '../types';
 import { Shield, Sparkles, FolderLock, Scale } from 'lucide-react';
 
@@ -11,6 +12,7 @@ interface DashboardProps {
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ health, error, loading }) => {
+
   return (
     <div className="space-y-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Hero / System Banner */}
@@ -47,6 +49,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ health, error, loading }) 
 
       {/* Backend Health Check Status */}
       <HealthStatus health={health} error={error} loading={loading} />
+
+      {/* Media Upload & Evidence Ingestion (Phase 2) */}
+      <MediaUpload />
 
       {/* Modular Pipeline Architecture Overview */}
       <PipelineOverview />
