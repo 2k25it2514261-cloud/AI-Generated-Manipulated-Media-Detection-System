@@ -1,0 +1,13 @@
+{
+  "name": "ai-media-forensics-extension",
+  "version": "1.0.0",
+  "description": "Manifest V3 Browser Extension for Media Forensics",
+  "private": true,
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.260",
+    "typescript": "^5.2.2"
+  }
+}
