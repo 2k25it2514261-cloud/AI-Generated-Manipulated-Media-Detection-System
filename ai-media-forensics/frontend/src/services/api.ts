@@ -1,4 +1,5 @@
 import { HealthResponse, MediaUploadResult } from '../types';
+import { DetectionResultData } from '../components/DetectionResults';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -26,6 +27,23 @@ export async function uploadMedia(file: File): Promise<MediaUploadResult> {
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({ detail: 'Upload failed' }));
     throw new Error(errorData.detail || `Upload failed with status: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+export async function runDetection(mediaId: string): Promise<DetectionResultData> {
+  const formData = new FormData();
+  formData.append('media_id', mediaId);
+
+  const response = await fetch(`${API_BASE_URL}/api/v1/detect/image`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({ detail: 'Detection failed' }));
+    throw new Error(errorData.detail || `Detection failed with status: ${response.status}`);
   }
 
   return response.json();
